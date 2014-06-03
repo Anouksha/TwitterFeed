@@ -3,6 +3,8 @@ __author__ = 'anouksha'
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
+import json
+import pymongo
 
 api_key = 'ARuQQNlhwQPF8X1zHbbQOGkJW'
 api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
@@ -11,8 +13,13 @@ access_secret = 'fQaBw3TG9K8eoMtV0MtBERJhCJJw1gBRY8aPaMtnqe1Qg'
 
 class listener(StreamListener):
 
+    def __init__(self, api):
+        #self.api = tweepy.API(auth)
+        self.db = pymongo.MongoClient().test
+
     def on_data(self, data):
-        print data
+        #print data
+        self.db.tweets.insert(json.loads(data))
         return True
 
     def on_error(self, status):
