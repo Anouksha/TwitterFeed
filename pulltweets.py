@@ -13,12 +13,10 @@ access_secret = 'fQaBw3TG9K8eoMtV0MtBERJhCJJw1gBRY8aPaMtnqe1Qg'
 
 class listener(StreamListener):
 
-    def __init__(self, api):
-        #self.api = tweepy.API(auth)
-        self.db = pymongo.MongoClient().test
 
     def on_data(self, data):
         #print data
+        self.db = pymongo.MongoClient().test
         self.db.tweets.insert(json.loads(data))
         return True
 
