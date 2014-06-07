@@ -7,6 +7,7 @@ from tweepy.streaming import StreamListener
 import re
 import json
 import pymongo
+import urllib, urllib2
 
 api_key = 'ARuQQNlhwQPF8X1zHbbQOGkJW'
 api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
@@ -17,9 +18,28 @@ auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
-
-
-results = api.search(q="number")
-
+phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+results = api.search(q="call")
+count = 1
 for result in results:
-    print result.text
+    if phonePattern.search(result.text):
+        print str(count)+'. '+result.text
+        count+=1
+
+'''def search_twitter(query, no_retweets=True):
+    if no_retweets:
+        query += ' -RT'
+
+    url = 'http://search.twitter.com/search.json?%s' % urllib.urlencode({
+            'q': query,
+            'lang': 'en', # restrict results to english tweets
+            'rpp': 100, # return 100 results per page (maximum value)
+    })
+    response = json.loads(urllib2.urlopen(url).read())
+    return response['results']
+
+
+results = search_twitter('call')
+
+for tweet in results:
+    print tweet['text'].encode('utf-8', 'ignore')'''
