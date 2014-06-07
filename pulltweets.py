@@ -3,6 +3,7 @@ __author__ = 'anouksha'
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
+import re
 import json
 import pymongo
 
@@ -15,6 +16,7 @@ class listener(StreamListener):
 
 
     def on_data(self, data):
+
         #print data
         self.db = pymongo.MongoClient().test
         self.db.tweets.insert(json.loads(data))
@@ -26,5 +28,8 @@ class listener(StreamListener):
 
 auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
-twitterStream = Stream(auth, listener())
+l=listener()
+twitterStream = Stream(auth, l)
 twitterStream.filter(track=["number"])
+#phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+
