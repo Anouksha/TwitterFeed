@@ -19,12 +19,17 @@ auth.set_access_token(access_token, access_secret)
 
 api = tweepy.API(auth)
 phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
-results = api.search(q="call")
+
+results = api.search(q="dial")
 count = 1
 for result in results:
     if phonePattern.search(result.text):
         print str(count)+'. '+result.text
         count+=1
+        data={}
+        data['text']=result.text
+        db = pymongo.MongoClient().test
+        db.phonetweets.insert(data)
 
 '''def search_twitter(query, no_retweets=True):
     if no_retweets:

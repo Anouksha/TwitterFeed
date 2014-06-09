@@ -12,6 +12,8 @@ api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
 access_token = '2536032672-a5X8UEDQhZxsaHHjYPcUmtQbuVfDlw27pPF89xp'
 access_secret = 'fQaBw3TG9K8eoMtV0MtBERJhCJJw1gBRY8aPaMtnqe1Qg'
 
+count=1
+
 class listener(StreamListener):
 
 
@@ -25,7 +27,13 @@ class listener(StreamListener):
     def on_status(self, status):
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
         if phonePattern.search(status.text):
+            #self.db = pymongo.MongoClient().test
+            #self.db.phonetweets.insert(json.loads(status.text))
             print status.text
+            data={}
+            data['text']=status.text
+            db = pymongo.MongoClient().test
+            db.phonetweets.insert(data)
 
     def on_error(self, status):
         print status
@@ -35,6 +43,6 @@ auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 l=listener()
 twitterStream = Stream(auth, l)
-twitterStream.filter(track=["call"])
+twitterStream.filter(track=["call", "text","dial"])
 
 
