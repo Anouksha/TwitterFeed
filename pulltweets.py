@@ -26,10 +26,12 @@ class listener(StreamListener):
 
     def on_status(self, status):
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
-        if phonePattern.search(status.text):
+        m = phonePattern.search(status.text)
+        if m:
             #self.db = pymongo.MongoClient().test
             #self.db.phonetweets.insert(json.loads(status.text))
-            print str(status.from_user_name)+"\t"+str(status.created_at)+"\t"+status.text+"\t"+phonePattern.split(status.text)
+            print str(status.created_at)+ str(status.user.time_zone)+"          "+status.user.name
+            #print status.text+"\t"+ m.group()
             '''data={}
             data['text']=status.text
             db = pymongo.MongoClient().test

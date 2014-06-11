@@ -15,15 +15,18 @@ class listener(StreamListener):
 
     def on_status(self, status):
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
-        if phonePattern.search(status.text):
+        m = phonePattern.search(status.text)
+        if m:
             print status.text
             data={}
-            data['user'] = status.user
+            data['name'] = status.user.name
+            data['screen_name'] = status.user.screen_name
             data['created_at'] = status.created_at
+            data['timezone'] = status.user.time_zone
             data['text']=status.text
-            data['number'] = phonePattern.split(status.text)
+            data['number'] = m.group()
             db = pymongo.MongoClient().test
-            db.phonetweets.insert(data)
+            db.tweets_numbers.insert(data)
 
     def on_error(self, status):
         print status
