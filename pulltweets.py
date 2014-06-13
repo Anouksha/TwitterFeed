@@ -30,8 +30,9 @@ class listener(StreamListener):
         if m:
             #self.db = pymongo.MongoClient().test
             #self.db.phonetweets.insert(json.loads(status.text))
-            print str(status.created_at)+ str(status.user.time_zone)+"          "+status.user.name
+            #print str(status.created_at)+ str(status.user.time_zone)+"          "+status.user.name
             #print status.text+"\t"+ m.group()
+            print status
             '''data={}
             data['text']=status.text
             db = pymongo.MongoClient().test
