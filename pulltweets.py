@@ -1,5 +1,6 @@
 __author__ = 'anouksha'
 
+import tweepy
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -16,15 +17,18 @@ count=1
 
 class listener(StreamListener):
 
+    def __init__(self,api):
+        self.count = 0
+        self.api=api
 
     '''def on_data(self, data):
 
-        #print data
+        print data
         self.db = pymongo.MongoClient().test
-        self.db.tweets.insert(json.loads(data))
+        self.db.thousand_tweets.insert(json.loads(data))
         return True'''
 
-    def on_status(self, status):
+    '''def on_status(self, status):
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
         m = phonePattern.search(status.text)
         if m:
@@ -33,10 +37,24 @@ class listener(StreamListener):
             #print str(status.created_at)+ str(status.user.time_zone)+"          "+status.user.name
             #print status.text+"\t"+ m.group()
             print status
-            '''data={}
+            data={}
             data['text']=status.text
             db = pymongo.MongoClient().test
             db.phonetweets.insert(data)'''
+
+    def on_status(self, status):
+        phonePattern = re.compile(r'(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*(\d{1})\D*$')
+        m = phonePattern.search(status.text)
+        if m:
+            self.count += 1
+            print str(self.count)+". "+status.text
+            data={}
+            data['text']=status.text
+            db = pymongo.MongoClient().sample
+            db.hundred_tweets.insert(data)
+            if self.count>=100:
+                exit()
+
 
     def on_error(self, status):
         print status
@@ -44,8 +62,13 @@ class listener(StreamListener):
 
 auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
-l=listener()
+l=listener(tweepy.API(auth))
 twitterStream = Stream(auth, l)
-twitterStream.filter(track=["call", "text","dial"])
+try:
+    twitterStream.filter(track=["call","dial", "sms", "contact number","text"])
+except:
+    pass
+
+
 
 
