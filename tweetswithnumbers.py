@@ -36,7 +36,7 @@ auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 l=listener()
 twitterStream = Stream(auth, l)
-twitterStream.filter(track=["call", "text","dial","credit card","services", "caller","interest",
+twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
                             "mortgage","insurance","calling","scam","political","company", "visa",
                             "rate", "cash","sales","phone","loan","marketing","sms","law","free",
                             "cell","security","number","visa"])
