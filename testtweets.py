@@ -7,7 +7,7 @@ db = pymongo.MongoClient().sample
 tweets = db.hundred_tweets.find()
 
 phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
-#bharat_phonePattern = re.compile('(([+]?([0-9]+)[.*=$, \n\t-])?\\s*\\(?\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*\\)?\\s*[.*=$, \n\t-]\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*[.*=$, \n\t-]\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*([0-9]))')
+#phonePattern = re.compile('(([+]?([0-9]+)[.*=$, \n\t-])?\\s*\\(?\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*\\)?\\s*[.*=$, \n\t-]\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*[.*=$, \n\t-]\\s*([0-9])\\s*([0-9])\\s*([0-9])\\s*([0-9]))')
 count = 1
 for tweet in tweets:
     #print tweet['text']
