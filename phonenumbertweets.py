@@ -37,6 +37,9 @@ try:
     twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
                             "mortgage","insurance","calling","scam","political","company", "visa",
                             "rate", "cash","sales","phone","loan","marketing","sms","law","free",
-                            "cell","security","number","visa","contact"])
+                            "cell","security","number","visa","contact","800notes", "telemarketer",
+                            "yellowpages","yellowpage", "fraud", "customer service", "landline",
+                            "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
+                            "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
 except:
     pass
