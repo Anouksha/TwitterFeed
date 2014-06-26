@@ -7,6 +7,7 @@ import re
 import pymongo
 import json
 import time
+import sched
 
 api_key = 'ARuQQNlhwQPF8X1zHbbQOGkJW'
 api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
@@ -15,41 +16,45 @@ access_secret = 'fQaBw3TG9K8eoMtV0MtBERJhCJJw1gBRY8aPaMtnqe1Qg'
 
 class listener(StreamListener):
 
-    '''def __init__(self):
+    def __init__(self):
         self.count = 1
         #self.api=api
         self.filename = "phone-"+time.strftime('%d-%m-%Y:%H:%M:%S')
-        self.text=""
-        #self.output = open(self.filename, 'a')'''
+        #self.output = open(self.filename, 'a')
 
     def on_data(self, data):
 
         phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
         m = phonePattern.search(json.loads(data)['text'])
         if m:
-            print json.loads(data)['text']
+            #print json.loads(data)['text']
             #print status
-            db = pymongo.MongoClient().tweets
-            db.phone_numbers.insert(json.loads(data))
-            #output = open(self.filename, 'a')
-            '''self.text = self.text+str(self.count)+". "+json.loads(data)['text']
-            print str(self.count)+". "+json.loads(data)['text']
-            self.count += 1'''
+            #db = pymongo.MongoClient().tweets
+            #db.phone_numbers.insert(json.loads(data))
+            try:
+                output = open(self.filename, 'a')
+                text = str(self.count)+". "+json.loads(data)['text']
+                print text
+                self.count += 1
+                output.write(text+"\n")
+                output.close()
+
+            except:
+                pass
+            finally:
+                output.close()
         return True
 
     def on_error(self, status):
         print status
 
-    '''def write_data(self, text):
-        output = open(self.filename, 'a')
-        output.write(text+"\n")
-        output.close()'''
 
 
 auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 l=listener()
-twitterStream = Stream(auth, l)
+twitterStream = Stream(auth, l, timeout = 5)
+s= sched.scheduler(time.time, time.sleep)
 try:
     twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
                             "mortgage","insurance","calling","scam","political","company", "visa",
@@ -58,6 +63,5 @@ try:
                             "yellowpages","yellowpage", "fraud", "customer service", "landline",
                             "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
                             "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
-    #l.write_data(l.text)
 except:
     pass
