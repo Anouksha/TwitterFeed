@@ -12,10 +12,27 @@ def job_function():
 
 sched.add_cron_job(job_function, second = '*/10')'''
 
-'''import time
+import time
+import sched
 
-def job__function():
-    print "Hello World"
+def job__function(sc):
+    print time.strftime('%d-%m-%Y:%H:%M:%S')+"\tHello World"
+    sc.enter(10,1,job__function,(sc,))
 
-job__function()
-time.sleep(10)'''
+print "Outside"
+s=sched.scheduler(time.time, time.sleep)
+s.enter(10,1,job__function,(s,))
+s.run()
+
+
+
+'''from crontab import CronTab
+
+cron = CronTab()
+cmd = 'sudo ~/PycharmProjects/TwitterFeed/./my_script.sh'
+job  = cron.new(cmd)
+job.minute.every(2)
+cron.remove_all()
+cron.write()
+
+print cron.render()'''
