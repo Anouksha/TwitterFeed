@@ -18,7 +18,7 @@ class listener(StreamListener):
 
     def __init__(self):
         self.count = 0
-        self.sec = 1
+        self.hour = 1
         #self.api=api
         self.filename = "statistics"
         self.start_time = datetime.datetime.now()
@@ -31,17 +31,17 @@ class listener(StreamListener):
         if m:
             try:
                 self.count += 1
-                text = str(self.count)+". "+json.loads(data)['text']
-                print text
+                #text = str(self.count)+". "+json.loads(data)['text']
+                #print text
                 #print status
                 db = pymongo.MongoClient().tweets
                 db.phone_numbers.insert(json.loads(data))
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0,60):
+                if (t-self.start_time) > datetime.timedelta(0,3600):
                     output = open(self.filename, 'a')
-                    output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\t"+str(self.sec)+"\t"+str(self.count)+"\n")
+                    output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tHour "+str(self.hour)+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
-                    self.sec += 1
+                    self.hour += 1
                     self.start_time = datetime.datetime.now()
                     output.close()
             except:
