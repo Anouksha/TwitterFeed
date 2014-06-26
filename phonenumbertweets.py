@@ -31,13 +31,13 @@ class listener(StreamListener):
         if m:
             try:
                 self.count += 1
-                #text = str(self.count)+". "+json.loads(data)['text']
-                #print text
+                text = str(self.count)+". "+json.loads(data)['text']
+                print text
                 #print status
-                db = pymongo.MongoClient().tweets
-                db.phone_numbers.insert(json.loads(data))
+                #db = pymongo.MongoClient().tweets
+                #db.phone_numbers.insert(json.loads(data))
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0,3600):
+                if (t-self.start_time) > datetime.timedelta(0,0,0,0,0,1,0):
                     output = open(self.filename, 'a')
                     output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tHour "+str(self.hour)+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
