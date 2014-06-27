@@ -31,7 +31,7 @@ class listener(StreamListener):
         m = phonePattern.search(json.loads(data)['text'])
         if m:
             try:
-                #self.count += 1
+                self.count += 1
                 #text = str(self.count)+". "+json.loads(data)['text']
                 #print text
                 #print status
