@@ -8,6 +8,7 @@ import pymongo
 import json
 import time
 import datetime
+import sys
 
 api_key = 'ARuQQNlhwQPF8X1zHbbQOGkJW'
 api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
@@ -30,21 +31,22 @@ class listener(StreamListener):
         m = phonePattern.search(json.loads(data)['text'])
         if m:
             try:
-                self.count += 1
+                #self.count += 1
                 #text = str(self.count)+". "+json.loads(data)['text']
                 #print text
                 #print status
                 db = pymongo.MongoClient().tweets
                 db.phone_numbers.insert(json.loads(data))
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0,0,0,0,0,1,0):
+                if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
                     output = open(self.filename, 'a')
-                    output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tHour "+str(self.hour)+"\tCount: "+str(self.count)+"\n")
+                    output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
                     self.hour += 1
                     self.start_time = datetime.datetime.now()
                     output.close()
-            except:
+                    raise SystemExit
+            except Exception:
                 pass
         return True
 
