@@ -35,8 +35,8 @@ class listener(StreamListener):
                 #text = str(self.count)+". "+json.loads(data)['text']
                 #print text
                 #print status
-                db = pymongo.MongoClient().tweets
-                db.phone_numbers.insert(json.loads(data))
+                db = pymongo.MongoClient().Twitter
+                db.tweets.insert(json.loads(data))
                 t=datetime.datetime.now()
                 if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
                     output = open(self.filename, 'a')
