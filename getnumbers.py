@@ -13,11 +13,12 @@ count = 0
 pc = 0
 for tweet in tweets:
     count += 1
-    if count <= 100:
+    if count <= 1000:
         m = phonePattern.search(tweet['text'])
         if m:
             pc += 1
-            print str(pc)+". "+tweet['text'] + "\tNumber: "+ m.group()
+            #print str(pc)+". "+tweet['text'] + "\tNumber: "+ m.group()
+            #print m.group()
             data={}
             data['name'] = tweet['user']['name']
             data['screen_name'] = tweet['user']['screen_name']
@@ -35,4 +36,8 @@ nc = 0
 print "Distinct Numbers:"
 for num in nums:
     nc += 1
-    print str(nc) +". " +num+"\tCount:"+str(db.numbers.find({"number":num}).count())
+    accounts =  (db.numbers.find({"number":num})).distinct("name")
+    print str(nc) +". " +num+"\tCount:"+str(db.numbers.find({"number":num}).count())+"\tNum of Accounts: "+str(len(accounts))
+
+'''accounts =  (db.numbers.find({"number":"0881147035"})).distinct("name")
+print str(len(accounts))'''
