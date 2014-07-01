@@ -4,8 +4,8 @@ import pymongo
 import re
 import sys
 
-db = pymongo.MongoClient().tweets
-tweets = db.phone_numbers.find()
+db = pymongo.MongoClient().Twitter
+tweets = db.tweets.find()
 filename = "phone_stats"
 
 phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})')

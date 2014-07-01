@@ -27,7 +27,7 @@ class listener(StreamListener):
 
     def on_data(self, data):
 
-        phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})\D*(\d*)$')
+        phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})')
         m = phonePattern.search(json.loads(data)['text'])
         if m:
             try:
@@ -37,6 +37,15 @@ class listener(StreamListener):
                 #print status
                 db = pymongo.MongoClient().Twitter
                 db.tweets.insert(json.loads(data))
+	        data1={}
+        	data1['name'] = json.loads(data)['user']['name']
+        	data1['screen_name'] = json.loads(data)['user']['screen_name']
+        	data1['created_at'] = json.loads(data)['created_at']
+        	data1['timezone'] = json.loads(data)['user']['time_zone']
+        	data1['text']=json.loads(data)['text']
+        	data1['number'] = m.group()
+        	db.numbers.insert(data1)
+
                 t=datetime.datetime.now()
                 if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
                     output = open(self.filename, 'a')
