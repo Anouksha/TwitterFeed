@@ -8,7 +8,7 @@ db = pymongo.MongoClient().Twitter
 tweets = db.tweets.find()
 filename = "phone_stats"
 
-phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})')
+phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
 count = 0
 pc = 0
 for tweet in tweets:
@@ -24,11 +24,22 @@ for tweet in tweets:
         data['created_at'] = tweet['created_at']
         data['timezone'] = tweet['user']['time_zone']
         data['text']=tweet['text']
+        data['verified'] = tweet['user']['verified']
         data['number'] = m.group()
+        db.numbers.insert(data)
+    else:
+        data={}
+        data['name'] = tweet['user']['name']
+        data['screen_name'] = tweet['user']['screen_name']
+        data['created_at'] = tweet['created_at']
+        data['timezone'] = tweet['user']['time_zone']
+        data['text']=tweet['text']
+        data['verified'] = tweet['user']['verified']
+        data['number'] = "no match"
         db.numbers.insert(data)
 
 
-nums = db.numbers.distinct("number")
+'''nums = db.numbers.distinct("number")
 nc = 0
 print "Distinct Numbers:"
 for num in nums:
@@ -42,5 +53,5 @@ for num in nums:
     except:
         pass
 
-'''accounts =  (db.numbers.find({"number":"0881147035"})).distinct("name")
+accounts =  (db.numbers.find({"number":"0881147035"})).distinct("name")
 print str(len(accounts))'''

@@ -27,7 +27,7 @@ class listener(StreamListener):
 
     def on_data(self, data):
 
-        phonePattern = re.compile(r'(\d{3})\D*(\d{3})\D*(\d{4})')
+        phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
         m = phonePattern.search(json.loads(data)['text'])
         if m:
             try:
