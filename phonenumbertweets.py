@@ -43,7 +43,7 @@ class listener(StreamListener):
                 data1['created_at'] = json.loads(data)['created_at']
                 data1['timezone'] = json.loads(data)['user']['time_zone']
                 data1['text']=json.loads(data)['text']
-                data1['number'] = m.group()
+                data1['number'] = m.group().strip()
                 db.numbers.insert(data1)
 
                 t=datetime.datetime.now()

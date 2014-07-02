@@ -25,7 +25,7 @@ for tweet in tweets:
         data['timezone'] = tweet['user']['time_zone']
         data['text']=tweet['text']
         data['verified'] = tweet['user']['verified']
-        data['number'] = m.group()
+        data['number'] = m.group().strip()
         db.numbers.insert(data)
     else:
         data={}

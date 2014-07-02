@@ -12,5 +12,5 @@ count = 1
 for tweet in tweets:
     #print tweet['text']
     if phonePattern.search(tweet['text']):
-        print str(count)+". "+tweet['text'] + "\tNumber: "+ phonePattern.search(tweet['text']).group()
-    count +=1
+        print str(count)+". "+tweet['text'] + "\tNumber:"+ (phonePattern.search(tweet['text']).group()).strip()
+        count +=1
