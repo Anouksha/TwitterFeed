@@ -32,22 +32,43 @@ class listener(StreamListener):
         if m:
             try:
                 self.count += 1
-                #text = str(self.count)+". "+json.loads(data)['text']
-                #print text
+                text = str(self.count)+". "+json.loads(data)['text']
+                print text
                 #print status
                 db = pymongo.MongoClient().Twitter
                 db.tweets.insert(json.loads(data))
+                number = m.group().strip()
                 data1={}
                 data1['name'] = json.loads(data)['user']['name']
                 data1['screen_name'] = json.loads(data)['user']['screen_name']
                 data1['created_at'] = json.loads(data)['created_at']
                 data1['timezone'] = json.loads(data)['user']['time_zone']
                 data1['text']=json.loads(data)['text']
-                data1['number'] = m.group().strip()
+                data1['verified'] = json.loads(data)['user']['verified']
+                data1['number'] = number
                 db.numbers.insert(data1)
 
+                c = db.phone_stats.find({"number": number}).count()
+                if c>0:
+                    num = db.phone_stats.find({"number": number})
+                    for n in num:
+                        count = n['count'] + 1
+                        accounts = (db.numbers.find({"number": number})).distinct("name")
+                        db.phone_stats.update({"number": number},{"$set": {"count": count, "accounts": accounts, "accounts_num":len(accounts)}})
+
+                    #db.phone_stats.update({"number": number},{"$set": {"accounts": accounts}})
+                    #db.phone_stats.update({"number": number},{"$set": {"accounts_num":len(accounts)}})
+                else:
+                    data2 = {}
+                    accounts = (db.numbers.find({"number":number})).distinct("name")
+                    data2['number'] = number
+                    data2['count'] = db.numbers.find({"number":number}).count()
+                    data2['accounts'] = accounts
+                    data2['accounts_num'] = len(accounts)
+                    db.phone_stats.insert(data2)
+
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
+                if (t-self.start_time) > datetime.timedelta(0, 10, 0, 0, 0, 0, 0):
                     output = open(self.filename, 'a')
                     output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
