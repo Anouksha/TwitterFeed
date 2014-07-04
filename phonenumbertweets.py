@@ -68,7 +68,7 @@ class listener(StreamListener):
                     db.phone_stats.insert(data2)
 
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0, 10, 0, 0, 0, 0, 0):
+                if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
                     output = open(self.filename, 'a')
                     output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
