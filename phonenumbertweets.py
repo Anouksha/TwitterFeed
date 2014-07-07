@@ -32,8 +32,8 @@ class listener(StreamListener):
         if m:
             try:
                 self.count += 1
-                text = str(self.count)+". "+json.loads(data)['text']
-                print text
+                #text = str(self.count)+". "+json.loads(data)['text']
+                #print text
                 #print status
                 db = pymongo.MongoClient().Twitter
                 db.tweets.insert(json.loads(data))
