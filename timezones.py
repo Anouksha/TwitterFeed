@@ -3,7 +3,7 @@ __author__ = 'anouksha'
 import pymongo
 import sys
 
-db = pymongo.MongoClient().tweets
+db = pymongo.MongoClient().Twitter
 timezones = db.numbers.distinct("timezone")
 
 print "Total number of distinct timezones: "+str(len(timezones))

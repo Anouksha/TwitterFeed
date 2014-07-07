@@ -21,7 +21,7 @@ class listener(StreamListener):
         self.count = 0
         self.hour = 1
         #self.api=api
-        self.filename = "statistics"
+        self.filename = "statistics_2mins"
         self.start_time = datetime.datetime.now()
         #self.output = open(self.filename, 'a')
 
@@ -68,7 +68,7 @@ class listener(StreamListener):
                     db.phone_stats.insert(data2)
 
                 t=datetime.datetime.now()
-                if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 14, 0, 0):
+                if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 1, 0, 0):
                     output = open(self.filename, 'a')
                     output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
@@ -77,7 +77,8 @@ class listener(StreamListener):
                     output.close()
                     raise SystemExit
             except Exception:
-                pass
+                print sys.exc_info()
+		pass
         return True
 
     def on_error(self, status):
@@ -97,4 +98,5 @@ try:
                             "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
                             "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
 except:
+    print sys.exc_info()	
     pass
