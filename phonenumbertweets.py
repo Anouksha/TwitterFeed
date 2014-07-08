@@ -24,19 +24,22 @@ class listener(StreamListener):
         self.filename = "statistics_2mins"
         self.start_time = datetime.datetime.now()
         #self.output = open(self.filename, 'a')
+        self.phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
+        self.db = pymongo.MongoClient().Twitter
+
 
     def on_data(self, data):
 
-        phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
-        m = phonePattern.search(json.loads(data)['text'])
+        #phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
+        m = self.phonePattern.search(json.loads(data)['text'])
         if m:
             try:
                 self.count += 1
                 #text = str(self.count)+". "+json.loads(data)['text']
                 #print text
                 #print status
-                db = pymongo.MongoClient().Twitter
-                db.tweets.insert(json.loads(data))
+                #db = pymongo.MongoClient().Twitter
+                self.db.tweets.insert(json.loads(data))
                 number = m.group().strip()
                 data1={}
                 data1['name'] = json.loads(data)['user']['name']
@@ -46,26 +49,26 @@ class listener(StreamListener):
                 data1['text']=json.loads(data)['text']
                 data1['verified'] = json.loads(data)['user']['verified']
                 data1['number'] = number
-                db.numbers.insert(data1)
+                self.db.numbers.insert(data1)
 
-                c = db.phone_stats.find({"number": number}).count()
+                c = self.db.phone_stats.find({"number": number}).count()
                 if c>0:
-                    num = db.phone_stats.find({"number": number})
+                    num = self.db.phone_stats.find({"number": number})
                     for n in num:
                         count = n['count'] + 1
-                        accounts = (db.numbers.find({"number": number})).distinct("name")
-                        db.phone_stats.update({"number": number},{"$set": {"count": count, "accounts": accounts, "accounts_num":len(accounts)}})
+                        accounts = (self.db.numbers.find({"number": number})).distinct("name")
+                        self.db.phone_stats.update({"number": number},{"$set": {"count": count, "accounts": accounts, "accounts_num":len(accounts)}})
 
                     #db.phone_stats.update({"number": number},{"$set": {"accounts": accounts}})
                     #db.phone_stats.update({"number": number},{"$set": {"accounts_num":len(accounts)}})
                 else:
                     data2 = {}
-                    accounts = (db.numbers.find({"number":number})).distinct("name")
+                    accounts = (self.db.numbers.find({"number":number})).distinct("name")
                     data2['number'] = number
-                    data2['count'] = db.numbers.find({"number":number}).count()
+                    data2['count'] = self.db.numbers.find({"number":number}).count()
                     data2['accounts'] = accounts
                     data2['accounts_num'] = len(accounts)
-                    db.phone_stats.insert(data2)
+                    self.db.phone_stats.insert(data2)
 
                 t=datetime.datetime.now()
                 if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 1, 0, 0):
