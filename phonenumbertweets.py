@@ -27,6 +27,21 @@ class listener(StreamListener):
         self.phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*\(?(\d{3})\s*\)?[\\\/.*=$,~ \n\t-]?\s*(\d{4})\d*')
         self.db = pymongo.MongoClient().Twitter
 
+    def start_stream(self, auth, l):
+        while True:
+            twitterStream = Stream(auth, l)
+            try:
+                twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
+                                        "mortgage","insurance","calling","scam","political","company", "visa",
+                                        "rate", "cash","sales","phone","loan","marketing","sms","law","free",
+                                        "cell","security","number","visa","contact","800notes", "telemarketer",
+                                        "yellowpages","yellowpage", "fraud", "customer service", "landline",
+                                        "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
+                                        "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
+            except:
+                print sys.exc_info()
+                continue
+
 
     def on_data(self, data):
 
@@ -92,14 +107,4 @@ auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 l=listener()
 twitterStream = Stream(auth, l)
-try:
-    twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
-                            "mortgage","insurance","calling","scam","political","company", "visa",
-                            "rate", "cash","sales","phone","loan","marketing","sms","law","free",
-                            "cell","security","number","visa","contact","800notes", "telemarketer",
-                            "yellowpages","yellowpage", "fraud", "customer service", "landline",
-                            "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
-                            "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
-except:
-    print sys.exc_info()	
-    pass
+l.start_stream(auth, l)
