@@ -70,15 +70,15 @@ class listener(StreamListener):
                     data2['accounts_num'] = len(accounts)
                     self.db.phone_stats.insert(data2)
 
-                t=datetime.datetime.now()
+                '''t=datetime.datetime.now()
                 if (t-self.start_time) > datetime.timedelta(0, 59, 0, 0, 1, 0, 0):
-                    '''output = open(self.filename, 'a')
+                    output = open(self.filename, 'a')
                     output.write(time.strftime('%d-%m-%Y:%H:%M:%S')+"\tCount: "+str(self.count)+"\n")
                     self.count = 0
                     self.hour += 1
                     self.start_time = datetime.datetime.now()
-                    output.close()'''
-                    raise SystemExit
+                    output.close()
+                    raise SystemExit'''
             except Exception:
                 print sys.exc_info()
 		#pass
