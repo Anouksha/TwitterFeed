@@ -12,11 +12,11 @@ phonePattern = re.compile(r'[+]?([0-9]+)?[\(.*=$,~ \n\t-]?\s*(\d{3})\s*\)?[\\\/.
 count = 0
 pc = 0
 for tweet in tweets:
-    count += 1
-    if count > 175275:
+    pc += 1
+    if pc > 175279:
         m = phonePattern.search(tweet['text'])
         if m:
-            pc += 1
+            #pc += 1
             #print str(pc)+". "+tweet['text'] + "\tNumber: "+ m.group()
             #print m.group()
             number = m.group().strip()
