@@ -10,10 +10,10 @@ import time
 import datetime
 import sys
 
-api_key = 'ARuQQNlhwQPF8X1zHbbQOGkJW'
-api_secret = 'IboCMM6EjsBqaUlD2vLe4Crr1OtaDp58btKiYd7loUUTvDiUQM'
-access_token = '2536032672-a5X8UEDQhZxsaHHjYPcUmtQbuVfDlw27pPF89xp'
-access_secret = 'fQaBw3TG9K8eoMtV0MtBERJhCJJw1gBRY8aPaMtnqe1Qg'
+api_key = 'HU4NnHMfgMaWWl9yvwyUZ6ngO'
+api_secret = 'xfkf2Kzno8leUjCT7MoFR7G1348yzdFKNjw1Fby074c9IShUKY'
+access_token = '2536032672-WZiuBZf2NenQC4q5ulnBDu8NtRO5WlBBOTF01Bh'
+access_secret = 'K77q99T28ecB5ERtkfFedtW6K0ikVBmkwiNYwikGooXlH'
 
 class listener(StreamListener):
 
@@ -28,19 +28,19 @@ class listener(StreamListener):
         self.db = pymongo.MongoClient().Twitter
 
     def start_stream(self, auth, l):
-        while True:
-            twitterStream = Stream(auth, l)
-            try:
-                twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
-                                        "mortgage","insurance","calling","scam","political","company", "visa",
-                                        "rate", "cash","sales","phone","loan","marketing","sms","law","free",
-                                        "cell","security","number","visa","contact","800notes", "telemarketer",
-                                        "yellowpages","yellowpage", "fraud", "customer service", "landline",
-                                        "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
-                                        "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
-            except:
-                print sys.exc_info()
-                continue
+        #while True:
+        twitterStream = Stream(auth, l)
+        try:
+            twitterStream.filter(track=["call", "text","dial","credit","card","services", "caller","interest",
+                                    "mortgage","insurance","calling","scam","political","company", "visa",
+                                    "rate", "cash","sales","phone","loan","marketing","sms","law","free",
+                                    "cell","security","number","visa","contact","800notes", "telemarketer",
+                                    "yellowpages","yellowpage", "fraud", "customer service", "landline",
+                                    "toll-free", "toll free", "complaint", "complaints", "tele", "cell phone",
+                                    "1-800","1-866","1-888","fax", "voice", "land line", "mobile", "ext"])
+        except:
+            print sys.exc_info()
+            pass
 
 
     def on_data(self, data):
@@ -50,8 +50,8 @@ class listener(StreamListener):
         if m:
             try:
                 self.count += 1
-                #text = str(self.count)+". "+json.loads(data)['text']
-                #print text
+                text = str(self.count)+". "+json.loads(data)['text']
+                print text
                 #print status
                 #db = pymongo.MongoClient().Twitter
                 self.db.tweets.insert(json.loads(data))
@@ -96,6 +96,7 @@ class listener(StreamListener):
                     raise SystemExit'''
             except Exception:
                 print sys.exc_info()
+                pass
 		#pass
         return True
 
@@ -106,5 +107,4 @@ class listener(StreamListener):
 auth=OAuthHandler(api_key, api_secret)
 auth.set_access_token(access_token, access_secret)
 l=listener()
-twitterStream = Stream(auth, l)
 l.start_stream(auth, l)
