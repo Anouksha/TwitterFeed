@@ -9,7 +9,7 @@ for n in nums:
 	if n['count']>1000:
 		print n['number']+"\tCount: "+str(n['count'])'''
 
-nums = db.phone_stats.find().sort([("count", pymongo.DESCENDING), ("accounts_num", pymongo.DESCENDING)]).limit(100)
+nums = db.phone_stats.find().sort([("count", pymongo.DESCENDING), ("accounts_num", pymongo.DESCENDING)]).limit(150)
 print "Number\tRetweets\tTotal_Count\tVerified\tNot_verified\tTotal_Accounts"
 for n in nums:
     try:
