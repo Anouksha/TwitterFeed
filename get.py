@@ -38,5 +38,5 @@ nums = db.phone_stats.find()
 for n in nums:
 	if pattern.search(n['number']):
 		print n['number'] + "\tCount: "+str(n['count'])'''
-
+nums.close()
 print "Done"
