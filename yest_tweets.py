@@ -5,14 +5,14 @@ import pymongo
 import json
 
 today = datetime.datetime.now()
-yest = today - datetime.timedelta(days =7)
+yest = today - datetime.timedelta(days =1)
 datePattern = yest.strftime("^%a %b %d.*%Y")
-print datePattern
+#print datePattern
 db = pymongo.MongoClient().Twitter
 tweets = db.tweets.find({"created_at":{"$regex":datePattern}})
 #print tweets
 count = tweets.count()
-print count
+#print count
 limit = int(count/10) + 1
 #print limit
 c = 0
@@ -31,6 +31,7 @@ for tweet in tweets:
         file += 1
         output.close()
         output = open(filename+str(file), 'a')
+        output.write(json.dumps(tweet)+"\n")
 
 output.close()
-print "Done"
+#print "Done"
